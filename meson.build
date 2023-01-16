@@ -5,7 +5,6 @@ project('sdlcpp', 'cpp',
 
 src_files = files(
   'main.cpp',
-  'quadtree.cpp',
 )
 
 executable('sdlprog', src_files)

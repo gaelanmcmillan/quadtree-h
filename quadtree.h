@@ -3,6 +3,19 @@
 #include <iostream>
 #include <string_view>
 
+struct Bounds2D {
+  size_t top_left_x, top_left_y, bot_right_x, bot_right_y;
+
+  Bounds2D() = delete;
+  consteval Bounds2D(size_t tl_x, size_t tl_y, size_t br_x, size_t br_y)
+      : top_left_x{tl_x}, top_left_y{tl_y}, bot_right_x{br_x}, bot_right_y{
+                                                                   br_y} {}
+
+  consteval static Bounds2D from_width_height(size_t width, size_t height) {
+    return Bounds2D(0, 0, width, height);
+  }
+};
+
 /**
  * @brief Check if a number is a power of 4 at compile time.
  *
@@ -17,18 +30,23 @@ consteval bool is_power_of_4(size_t number) {
   return prod == number;
 }
 
-template <class ElementType, size_t SubtreeCount, size_t SubtreeCapacity>
+template <class ElementType, size_t SubtreeCount, size_t SubtreeCapacity,
+          Bounds2D Bounds>
 class StaticQuadTree;
 
 /**
  * @brief A non-allocating, generic quadtree. Useful for accessing spatial data
- * efficiently.
+ * efficiently. A quadtree partitions a 2D space into nested quadrilateral
+ * regions, allowing for logarithmic access to points in a given partition.
  *
  * @tparam ElementType The type of the element stored in each quadtree node
- * @tparam Capacity The total number of elements to be stored in the quadtree.
- * Should be a power of 4.
+ * @tparam SubtreeCount The total number of subtrees into which the space is
+ * partitioned. Should be a power of 4.
+ * @tparam SubtreeCapacity The number of elements stored in each subtree.
+ * @tparam Bounds The 2D region being partitioned by the quadtree.
  */
-template <class ElementType, size_t SubtreeCount, size_t SubtreeCapacity>
+template <class ElementType, size_t SubtreeCount, size_t SubtreeCapacity,
+          Bounds2D Bounds>
 class StaticQuadTree {
 public:
   StaticQuadTree() {

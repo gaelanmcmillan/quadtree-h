@@ -1,15 +1,8 @@
-#include <concepts>
+#include "quadtree.h"
 #include <iostream>
 
-#include "quadtree.h"
-
-template <class T>
-concept printable = requires(T t) { std::cout << t << '\n'; };
-
-void print(const printable auto &item) { std::cout << item << std::endl; }
-
 int main() {
-  StaticQuadTree<int, 16> qt{};
-  print("Hello, world!");
+  StaticQuadTree<int, 64, 3, Bounds2D::from_width_height(1000, 1000)> qt{};
+  printf("QuadTree occupies %lu bytes\n", sizeof(qt));
   return 0;
 }
